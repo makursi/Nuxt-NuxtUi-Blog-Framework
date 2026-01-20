@@ -4,14 +4,14 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [{
-  label: 'Docs',
-  to: '/docs/getting-started',
-  icon: 'i-lucide-book-open',
+  label: 'Welcome',
+  to: '/hello',
+  icon: 'i-heroicons-arrow-right-on-rectangle',
   active: route.path.startsWith('/docs/getting-started')
 }, {
-  label: 'Components',
-  to: '/docs/components',
-  icon: 'i-lucide-box',
+  label: 'About',
+  to: '/about',
+  icon: 'i-heroicons-user-plus',
   active: route.path.startsWith('/docs/components')
 }])
 </script>
@@ -27,6 +27,28 @@ const items = computed<NavigationMenuItem[]>(() => [{
 
     <template #right>
       <UColorModeButton />
+
+      <!-- 登录和注册按钮 -->
+      <div class="flex items-center gap-2">
+        <UButton 
+          to="/auth/login" 
+          color="gray" 
+          variant="outline" 
+          size="md"
+          class="rounded-full"
+        >
+          Sign In
+        </UButton>
+        <UButton 
+          to="/auth/register" 
+          color="primary" 
+          variant="solid" 
+          size="md"
+          class="rounded-full"
+        >
+          Sign Up
+        </UButton>
+      </div>
 
       <UTooltip text="Open on GitHub" :kbds="['meta', 'G']">
         <UButton color="neutral" variant="ghost" to="https://github.com/nuxt/ui" target="_blank"

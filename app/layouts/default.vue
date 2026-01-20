@@ -1,7 +1,7 @@
 <!-- layouts/default.vue -->
 <script setup lang="ts">
-  import NuxtHeader from '~/components/layout/NuxtHeader.vue';
-  import NuxtFooter from '~/components/layout/NuxtFooter.vue';
+  import NuxtHeader from '~/components/layout/default/NuxtDefaultHeader.vue';
+  import NuxtFooter from '~/components/layout/default/NuxtDefaultFooter.vue';
 </script>
 
 <template>

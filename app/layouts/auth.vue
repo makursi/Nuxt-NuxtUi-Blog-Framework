@@ -1,13 +1,13 @@
- <script setup lang="ts">
- 
- </script>
- 
- <template>
-<main>
-   <slot />
-</main>
- </template>
- 
- <style lang="scss" scoped>
- 
- </style>
+<script setup lang="ts">
+
+</script>
+
+<template>
+   <div>
+      <slot></slot>
+   </div>
+</template>
+
+<style lang="scss" scoped>
+
+</style>

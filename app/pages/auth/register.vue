@@ -3,12 +3,8 @@
 
   const myToast = useMyToast()
   
-  function showToast(){
-  myToast.success('successful!','made a success! ')     
-  }
-
 const layout = 'auth'
-
+const loading = ref(false)
 const registerInput = ref({
   email: '',
   password: '',
@@ -17,6 +13,7 @@ const registerInput = ref({
 const config = useRuntimeConfig()
 const createUser = async ()=>{
 try {
+  loading.value = true
   const res = await $fetch(config.public?.API_BASE_URL+'/register', {
     headers:{ 
       Accept:'application/json',
@@ -25,13 +22,19 @@ try {
     method: 'POST',
     body: JSON.stringify(registerInput.value)
   })
-  console.log(res);
+  loading.value = false
+    myToast.success('create account successfully!', 'Your account was created!')
 } catch (error) {
+  loading.value = false
      const errmsg = error.message
-    
       myToast.error('Error',errmsg)
    }
+registerInput.value.email = ''
+registerInput.value.password = ''
+registerInput.value.name = ''
 }
+
+
 
 
 
@@ -51,8 +54,8 @@ try {
         <UFormField label="Password" required>
           <UInput placeholder="Enter your password" v-model="registerInput.password"/>
         </UFormField>
-        <UButton label="sign up" class="m-2 py-2" @click="createUser">
-          <NuxtLink to="/auth/register">sign up a account</NuxtLink>
+        <UButton label="sign up" class="m-2 py-2" @click="createUser" :loading="loading">
+  {{ loading?'processing~~' : 'create a account' }}
         </UButton>
         <UButton label="sign up" class="m-2 py-2">
           <NuxtLink to="/auth/login">sign in</NuxtLink>
