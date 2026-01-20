@@ -1,20 +1,63 @@
-<!-- pages/index.vue -->
 <script setup lang="ts">
-const layout = 'default'
+definePageMeta({
+  layout: 'default'
+})
+
+// 博客文章数据
+const blogPosts = [
+  {
+    id: 1,
+    icon: 'i-heroicons-light-bulb',
+    title: '创意灵感',
+    description: '探索激发创造力的方法和技巧，让你的思维更加活跃。'
+  },
+  {
+    id: 2,
+    icon: 'i-heroicons-code-bracket',
+    title: '编程之旅',
+    description: '分享编程学习的心路历程，以及实用的编码技巧。'
+  },
+  {
+    id: 3,
+    icon: 'i-heroicons-book-open',
+    title: '知识积累',
+    description: '记录日常学习心得，持续自我提升的重要性。'
+  }
+]
 </script>
 
-<template>
- <NuxtLayout :name="layout">
-  <ul>
-    <li>
-        <NuxtLink to="/about">About page</NuxtLink>
-      </li>
-    <li>
-      <NuxtLink to="/hello">Hello page</NuxtLink>
-    </li>
-    <li>
-      <NuxtLink to="/auth/login">login page</NuxtLink>
-    </li>
-  </ul>
-  </NuxtLayout>
+<template> 
+    <!-- Hero 区域 -->
+     <NuxtLayout>
+      <section class="py-20 md:py-32">
+        <div class="container mx-auto px-4">
+          <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              Choria Blog
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10">
+              Love yourself~
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 博客文章卡片组 -->
+      <section class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+          <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <UCard v-for="post in blogPosts" :key="post.id"
+                class="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-gray-700">
+                <div class="flex flex-col items-center text-center p-6">
+                  <UIcon :name="post.icon" class="w-12 h-12 text-primary-500 mb-4" />
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ post.title }}</h3>
+                  <p class="text-gray-600 dark:text-gray-300">{{ post.description }}</p>
+                </div>
+              </UCard>
+            </div>
+          </div>
+        </div>
+      </section>
+    </NuxtLayout>
 </template>

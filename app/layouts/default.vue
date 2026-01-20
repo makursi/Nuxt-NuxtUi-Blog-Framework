@@ -1,6 +1,7 @@
 <!-- layouts/default.vue -->
 <script setup lang="ts">
   import NuxtHeader from '~/components/layout/NuxtHeader.vue';
+  import NuxtFooter from '~/components/layout/NuxtFooter.vue';
 </script>
 
 <template>
@@ -17,11 +18,8 @@
     </main>
 
     <!-- 页脚（使用 Nuxt UI） -->
-    <UFooter>
-      <template #left>
-        <p class="text-sm text-muted">© {{ new Date().getFullYear() }} My Blog</p>
-      </template>
-    </UFooter>
+   <NuxtFooter>
+    </NuxtFooter>
   </div>
 </template>
 

@@ -1,5 +1,12 @@
 <script setup lang="ts">
+  import useMyToast from '~/composable/useMyToast'
+
+  const myToast = useMyToast()
   
+  function showToast(){
+  myToast.success('successful!','made a success! ')     
+  }
+
 const layout = 'auth'
 
 const registerInput = ref({
@@ -19,13 +26,14 @@ try {
     body: JSON.stringify(registerInput.value)
   })
   console.log(res);
-} catch (err) {
-   if(err?.response?.status===500){
-     
+} catch (error) {
+     const errmsg = error.message
+    
+      myToast.error('Error',errmsg)
    }
 }
 
-}
+
 
 </script>
 
