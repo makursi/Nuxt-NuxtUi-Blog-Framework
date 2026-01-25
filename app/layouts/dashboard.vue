@@ -5,7 +5,6 @@
 <template>
   <div>
       <UDashboardGroup>
-        
       </UDashboardGroup>
   </div>
 </template>

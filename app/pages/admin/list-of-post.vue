@@ -5,7 +5,7 @@ const layout = 'admin'
 <template>
   <div>
     <NuxtLayout :name='layout'>
-      <h1>your post page here</h1>
+      <h1>lits of posts</h1>
     </NuxtLayout>
   </div>
 </template>

@@ -62,20 +62,34 @@ onMounted(async ()=>{
 </script>
 
 <template>
-  <div>
-    <ul>
-      <li><NuxtLink to="/admin/dashboard">DashBoard</NuxtLink></li>
-      <li><NuxtLink to="/admin/list-of-post">Posts</NuxtLink></li>
-      <li>
-        <NuxtLink to="/auth/login">Login</NuxtLink>
-      </li>
-    </ul>
+
+  <UContainer>
+    <div>
+      <ul>
+        <li>
+          <NuxtLink to="/admin/dashboard">DashBoard</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/admin/list-of-post">Posts</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/auth/login">Login</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/admin/create-post">create post</NuxtLink>
+        </li>
+      </ul>
+     <div>
+        <slot></slot>
+      </div>
+
+      <UButton :label="logout" @click='logoutUser' :loading="loading"> {{ loading ? 'processing~~' : 'logout' }}
+      </UButton>
+    </div>
+  </UContainer>
 
 
-    <UButton :label="logout" @click='logoutUser' :loading="loading"> {{ loading ? 'processing~~' : 'logout' }}</UButton>
-  </div>
 
-  <div><slot></slot></div>
 </template>
 
 <style lang="scss" scoped>

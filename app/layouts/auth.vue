@@ -3,9 +3,13 @@
 </script>
 
 <template>
-   <div>
-      <slot></slot>
-   </div>
+
+   <UContainer>
+      <div>
+         <slot></slot>
+      </div>
+   </UContainer>
+
 </template>
 
 <style lang="scss" scoped>

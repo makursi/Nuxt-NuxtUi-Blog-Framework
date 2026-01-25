@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'default'
-})
 
+
+
+const layout = 'default'
 // 博客文章数据
 const blogPosts = [
   {
@@ -28,7 +28,7 @@ const blogPosts = [
 
 <template> 
     <!-- Hero 区域 -->
-     <NuxtLayout>
+     <NuxtLayout :name='layout'>
       <section class="py-20 md:py-32">
         <div class="container mx-auto px-4">
           <div class="max-w-4xl mx-auto text-center">
