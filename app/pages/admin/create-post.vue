@@ -25,7 +25,7 @@ const createPost = async ()=>{
   try {
     loading.value = true;
 const userData = JSON.parse(localStorage.getItem("userdata") || '{}')
-    const res = await $fetch(config.public?.API_BASE_URL + "/posts", {
+    const res = await $fetch(config.public?.API_BASE_URL + "/posts/createpost", {
 
       headers: {
         Accept: "application/json",

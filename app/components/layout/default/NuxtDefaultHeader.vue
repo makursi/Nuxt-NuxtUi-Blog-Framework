@@ -4,13 +4,13 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [{
-  label: 'Welcome',
-  to: '/hello',
+  label: 'Post',
+  to: '/admin/create-post',
   icon: 'i-heroicons-arrow-right-on-rectangle',
   active: route.path.startsWith('/docs/getting-started')
 }, {
-  label: 'About',
-  to: '/about',
+  label: 'Dashboard',
+  to: '/admin/list-of-post',
   icon: 'i-heroicons-user-plus',
   active: route.path.startsWith('/docs/components')
 }])
