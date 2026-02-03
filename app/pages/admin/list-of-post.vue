@@ -16,7 +16,12 @@ const totalPosts = ref(0);
 
 // 文章数据
 const postsArray = ref<any[]>([]);
-
+const isempty = (length:number)=>{
+   if(length===0){
+     return false
+   }
+   return true
+}
 // 获取文章列表
 const getPosts = async () => {
   try {
@@ -73,7 +78,7 @@ const deletePost = async (postId: number) => {
 };
 
 // 编辑文章
-const editPost = (postId: number) => {
+const editPost = (postId:number) => {
   navigateTo(`/admin/edit-post/${postId}`);
 };
 
@@ -107,6 +112,7 @@ onMounted(() => {
           color="primary" 
           size="lg"
           class="px-6 py-2"
+          v-if="isempty(postsArray.length)"
         >
           <UIcon name="i-heroicons-plus" class="mr-2" />
           新建文章

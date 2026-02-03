@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import slugify from 'slugify'
-import useMyToast from '~/composable/useMyToast';
 import MyEditor from '~/components/post/MyEditor.vue';
+import useMyToast from '~/composable/useMyToast';
 const myToast = useMyToast()
-
 const postInput = ref({
    title:'',
    post_content:'',
@@ -69,9 +68,6 @@ const userData = JSON.parse(localStorage.getItem("userdata") || '{}')
                 <UButton @click="createPost">Publish post</UButton>
               </div>
           </div>
-
-
-
         </div>
         </UMain>
       </div>
