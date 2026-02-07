@@ -1,6 +1,28 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import getUserData from '~/plugins/getUseData';
 
+const userdata = getUserData();
+ 
+const userInput = ref({
+    user: {
+    name: '',
+    email: ''
+    },
+    token:''
+})
+
+const notGuest = ref(true);
+
+
+const storedData = getUserData();
+
+onMounted(()=>{
+   if(storedData?.token){ 
+        userInput.value = storedData;
+        notGuest.value = false
+   }
+})
 const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [{
@@ -14,13 +36,15 @@ const items = computed<NavigationMenuItem[]>(() => [{
   icon: 'i-heroicons-user-plus',
   active: route.path.startsWith('/docs/components')
 }])
+
+
 </script>
 
 <template>
  <UHeader toggle-side="left">
     <template #title>
       <Logo class="h-6 w-auto" />
-      <h1>Choria Blog</h1>
+      <h1>{{ userInput.user.name || 'My'}} Blog</h1>
     </template>
 
     <UNavigationMenu :items="items" />
@@ -29,7 +53,7 @@ const items = computed<NavigationMenuItem[]>(() => [{
       <UColorModeButton />
 
       <!-- 登录和注册按钮 -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2" v-if="notGuest">
         <UButton 
           to="/auth/login" 
           color="gray" 

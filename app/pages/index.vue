@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
-
-
+import getUserData from '~/plugins/getUseData';
 const layout = 'default'
 // 博客文章数据
 const blogPosts = [
@@ -24,6 +22,26 @@ const blogPosts = [
     description: '记录日常学习心得，持续自我提升的重要性。'
   }
 ]
+
+
+const userInput = ref({
+  name:'My',
+  email:''
+});
+
+onMounted(()=>{
+
+       const userdata = getUserData();
+      //  console.log(userdata);\
+       if(userdata?.user){
+    userInput.value = {
+       name:userdata.user.name || 'My',
+       email:userdata.user.email || ''
+    }    
+       }
+      //  console.log(userInput.value.name);
+       
+})
 </script>
 
 <template> 
@@ -33,7 +51,7 @@ const blogPosts = [
         <div class="container mx-auto px-4">
           <div class="max-w-4xl mx-auto text-center">
             <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              Choria Blog
+         {{ userInput.name}} Blog
             </h1>
             <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10">
               Love yourself~
