@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const layout = 'auth'
+definePageMeta({
+  layout: 'auth' 
+})
+
 import useMyToast from '~/composable/useMyToast'
 const myToast = useMyToast()
 const loginInput = ref({
@@ -37,30 +40,42 @@ const loginUser = async () => {
 </script>
 
 <template>
-  <div>
-
-    <NuxtLayout :name="layout">
-<UContainer>
-        <UFormField label="Email">
-          <UInput placeholder="Enter your email" v-model="loginInput.email"/>
-        </UFormField>
-        <UFormField label="Password">
-          <UInput placeholder="Enter your Password" v-model="loginInput.password"/>
-        </UFormField>
-        <UButton label="Submit" class="m-2" @click="loginUser" :loading="loading">  {{ loading ? 'processing~~' : 'sign in' }}</UButton>
-
-        <div class="m-2 py-2">
-          <UButton label="sign up">
-            <NuxtLink to="/auth/register">sign up a account</NuxtLink>
-          </UButton>
-
-          <div>
-             <NuxtLink to="/admin/dashboard">go to dashboard</NuxtLink>
-          </div>
-        </div>
-      </UContainer>
-    </NuxtLayout>
+  <NuxtLayout :name="layout">
+  <div class="w-full max-w-md mx-auto">
+    <form @submit.prevent="loginUser" class="space-y-4">
+      <UFormField label="Email" name="email" required>
+        <UInput 
+          type="email" 
+          placeholder="Enter your email" 
+          v-model="loginInput.email"
+          class="w-full"
+        />
+      </UFormField>
+      
+      <UFormField label="Password" name="password" required>
+        <UInput 
+          type="password" 
+          placeholder="Enter your password" 
+          v-model="loginInput.password"
+          class="w-full"
+        />
+      </UFormField>
+      
+      <div class="pt-4">
+        <UButton 
+          type="submit" 
+          color="primary" 
+          variant="solid" 
+          size="lg" 
+          class="w-full py-2 text-center"
+          :loading="loading"
+        >
+          {{ loading ? 'Processing...' : 'Sign In' }}
+        </UButton>
+      </div>
+    </form>
   </div>
+</NuxtLayout>
 </template>
 
 <style lang="scss" scoped>
