@@ -25,4 +25,4 @@ logs
 
 # Skills directory (development files)
 .trae/skills/
-./agent/skills/
+.agent/skills/
