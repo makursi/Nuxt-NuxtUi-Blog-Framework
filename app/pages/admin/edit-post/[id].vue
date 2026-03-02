@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePostStore } from '~/stores/PostStore';
+import { usePostStore } from '~/stores/post';
 import slugify from 'slugify';
 import MyEditor from '~/components/post/MyEditor.vue';
 import useMyToast from '~/composable/useMyToast';

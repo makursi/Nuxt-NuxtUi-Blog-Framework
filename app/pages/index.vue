@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import getUserData from '~/plugins/getUseData';
-import { usePostStore } from '#imports';
-const { posts } = usePostStore();
-const blogPosts = ref<Post[]>([])
-const getcurrentposts = ()=>{
-     blogPosts.value = posts.value || [];
-   console.log(posts);
-   console.log(blogPosts.value);
-}
+import { ref, onMounted } from 'vue'
+import { useNuxtApp } from '#app'
+import { usePostStore } from '#imports'
 
+const { $getUserData } = useNuxtApp()
+const { posts } = usePostStore()
+const blogPosts = ref<Post[]>([])
+
+const getcurrentposts = ()=>{
+  blogPosts.value = posts.value || []
+  console.log(posts)
+  console.log(blogPosts.value)
+}
 
 const layout = 'default'
 
 const userInput = ref({
   name:'My',
   email:''
-});
+})
 
 onMounted(()=>{
-
-       const userdata = getUserData();
-      //  console.log(userdata);\
-       if(userdata?.user){
+  const userdata = $getUserData()
+  if(userdata?.user){
     userInput.value = {
-       name:userdata.user.name || 'My',
-       email:userdata.user.email || ''
-    }    
-       }
-      //  console.log(userInput.value.name);
-       getcurrentposts()
+      name:userdata.user.name || 'My',
+      email:userdata.user.email || ''
+    }
+  }
+  getcurrentposts()
 })
 </script>
 

@@ -3,10 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
   modules: [
-    '@nuxt/content',
     '@nuxt/ui',
     '@pinia/nuxt',
     '@nuxt/icon',
+    'nuxt-tiptap-editor'
   ],
   ui:{
     theme:{
@@ -22,5 +22,10 @@ export default defineNuxtConfig({
   },
   tiptap:{
      prefix:'Tiptap'
-  }
+  },
+  // 插件配置 - Nuxt 3 会自动导入 app/plugins 目录下的插件
+  // 客户端插件会通过 .client.ts 后缀自动识别
+  plugins: [
+    '~/plugins/getUserData.client.ts'
+  ]
 })

@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useNuxtApp } from '#app'
+import { navigateTo, showError } from 'nuxt/app'
 import type { NavigationMenuItem } from '@nuxt/ui'
-import getUserData from '~/plugins/getUseData';
-import useMyToast from '~/composable/useMyToast';
+import useMyToast from '~/composable/useMyToast'
+
 const myToast = useMyToast()
-const userData = getUserData()
+const { $getUserData, $clearUserData } = useNuxtApp()
+const userData = $getUserData()
 const loading = ref(false)
 const config = useRuntimeConfig()
 const items = computed<NavigationMenuItem[]>(()=>[
@@ -31,8 +35,6 @@ async function checkIfUserIsLoggedIn() {
   }
 }
 
-
-
 const logoutUser = async () => {
   try {
     loading.value = true
@@ -45,24 +47,27 @@ const logoutUser = async () => {
       body: JSON.stringify({ userId: userData?.user?.Id })
     })
     loading.value = false
-    localStorage.clear()
+    
+    // 使用新的clearUserData方法清除用户数据
+    $clearUserData()
+    
     await navigateTo('/auth/login');
     myToast.success(' successfully!', 'Logout account successfully~')
 
   } catch (error) {
     loading.value = false
     const errmsg = error.message
-    localStorage.clear()
+    
+    // 即使出错也要清除用户数据
+    $clearUserData()
+    
     await navigateTo('/auth/login');
   }
 }
 
-
 onMounted(async ()=>{
    await checkIfUserIsLoggedIn()
 })
-
-
 </script>
 
 <template>
@@ -76,7 +81,7 @@ onMounted(async ()=>{
        <div class="m-2 p-2 flex items-center justify-evenly">
           <h3 class="text-lg font-bold m-2">Welcome, {{ userData?.user?.name }}</h3>
           <h1 class="text-base text-pink-700">{{ userData?.user?.email }}</h1>
-          <UButton :label="logout" @click='logoutUser' :loading="loading" class="py-2 m-2"> {{ loading ? 'processing~~'
+          <UButton @click='logoutUser' :loading="loading" class="py-2 m-2"> {{ loading ? 'processing~~'
             :'logout' }}
           </UButton>
         </div>

@@ -1,29 +1,31 @@
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useNuxtApp } from '#app'
+import { useRoute } from 'vue-router'
 import type { NavigationMenuItem } from '@nuxt/ui'
-import getUserData from '~/plugins/getUseData';
+import { useUserStore } from '~/stores/user'
 
-const userdata = getUserData();
- 
+const { $getUserData } = useNuxtApp()
+const userStore = useUserStore()
+const route = useRoute()
+
 const userInput = ref({
-    user: {
+  user: {
     name: '',
     email: ''
-    },
-    token:''
+  },
+  token:''
 })
 
-const notGuest = ref(true);
-
-
-const storedData = getUserData();
+const notGuest = ref(true)
 
 onMounted(()=>{
-   if(storedData?.token){ 
-        userInput.value = storedData;
-        notGuest.value = false
-   }
+  const storedData = $getUserData()
+  if(storedData?.token){ 
+    userInput.value = storedData
+    notGuest.value = false
+  }
 })
-const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Post',
@@ -36,8 +38,6 @@ const items = computed<NavigationMenuItem[]>(() => [{
   icon: 'i-heroicons-user-plus',
   active: route.path.startsWith('/docs/components')
 }])
-
-
 </script>
 
 <template>

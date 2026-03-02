@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useNuxtApp } from '#app'
+import { navigateTo, useRuntimeConfig } from 'nuxt/app'
+import useMyToast from '~/composable/useMyToast'
+
 definePageMeta({
   layout: 'auth' 
 })
 
-import useMyToast from '~/composable/useMyToast'
+const { $saveUserData } = useNuxtApp()
 const myToast = useMyToast()
 const loginInput = ref({
    email:'',
@@ -25,18 +30,21 @@ const loginUser = async () => {
       body: JSON.stringify(loginInput.value)
     })
     loading.value = false
-    localStorage.setItem('userdata',JSON.stringify({
-       token:res?.token,
-       user:res?.user
-    }))
+    
+    // 使用新的saveUserData方法保存用户数据
+    $saveUserData({
+       token: res?.token,
+       user: res?.user
+    })
+    
     myToast.success(' successfully!', 'Login account successfully~')
-
-    navigateTo('/admin/dashboard');
+    navigateTo('/admin/dashboard')
   } catch (error) {
     loading.value = false
     const errmsg = error.message
     myToast.error('Error', errmsg)
-  }}
+  }
+}
 </script>
 
 <template>
