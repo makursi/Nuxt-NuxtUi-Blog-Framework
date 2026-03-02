@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useNuxtApp } from '#app'
 import { navigateTo, useRuntimeConfig } from 'nuxt/app'
 import useMyToast from '~/composable/useMyToast'
+import useUserData from '~/composable/useUserData'
 
 definePageMeta({
   layout: 'auth' 
 })
 
-const { $saveUserData } = useNuxtApp()
+const { saveUserData } = useUserData()
 const myToast = useMyToast()
 const loginInput = ref({
    email:'',
@@ -32,7 +32,7 @@ const loginUser = async () => {
     loading.value = false
     
     // 使用新的saveUserData方法保存用户数据
-    $saveUserData({
+    saveUserData({
        token: res?.token,
        user: res?.user
     })

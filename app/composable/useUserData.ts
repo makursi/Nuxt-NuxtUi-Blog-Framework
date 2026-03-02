@@ -38,8 +38,20 @@ const useUserData = ()=>{
    }
 }
 
+
+  const clearUserData = (): void => {
+    try {
+      localStorage.removeItem('userdata')
+      userStore.clearUser()
+    } catch (error) {
+      console.error('Error clearing user data:', error)
+    }
+  }
+  initializeUserData()
   return {
-     
+    getUserData,
+    saveUserData,
+    clearUserData
   }
 }
 

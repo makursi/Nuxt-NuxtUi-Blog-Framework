@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useNuxtApp } from '#app'
 import { useRoute } from 'vue-router'
 import type { NavigationMenuItem } from '@nuxt/ui'
-import { useUserStore } from '~/stores/user'
+import useUserData from '~/composable/useUserData'
 
-const { $getUserData } = useNuxtApp()
-const userStore = useUserStore()
+const { getUserData } = useUserData()
 const route = useRoute()
 
 const userInput = ref({
@@ -20,7 +18,7 @@ const userInput = ref({
 const notGuest = ref(true)
 
 onMounted(()=>{
-  const storedData = $getUserData()
+  const storedData = getUserData()
   if(storedData?.token){ 
     userInput.value = storedData
     notGuest.value = false

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useNuxtApp } from '#app'
 import { usePostStore } from '#imports'
+import useUserData from '~/composable/useUserData'
 
-const { $getUserData } = useNuxtApp()
+const { getUserData } = useUserData()
 const { posts } = usePostStore()
 const blogPosts = ref<Post[]>([])
 
@@ -13,15 +13,16 @@ const getcurrentposts = ()=>{
   console.log(blogPosts.value)
 }
 
-const layout = 'default'
-
+definePageMeta({
+  layout: 'default'
+});
 const userInput = ref({
   name:'My',
   email:''
 })
 
 onMounted(()=>{
-  const userdata = $getUserData()
+  const userdata = getUserData()
   if(userdata?.user){
     userInput.value = {
       name:userdata.user.name || 'My',
@@ -34,7 +35,7 @@ onMounted(()=>{
 
 <template> 
     <!-- Hero 区域 -->
-     <NuxtLayout :name='layout'>
+<NuxtLayout>
       <section class="py-20 md:py-32">
         <div class="container mx-auto px-4">
           <div class="max-w-4xl mx-auto text-center">
@@ -42,7 +43,8 @@ onMounted(()=>{
          {{ userInput.name}} Blog
             </h1>
             <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10">
-              Love yourself~
+              Love yourself
+~
             </p>
           </div>
         </div>
@@ -64,5 +66,5 @@ onMounted(()=>{
           </div>
         </div>
       </section>
-    </NuxtLayout>
+</NuxtLayout>
 </template>

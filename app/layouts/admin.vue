@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useNuxtApp } from '#app'
 import { navigateTo, showError } from 'nuxt/app'
 import type { NavigationMenuItem } from '@nuxt/ui'
 import useMyToast from '~/composable/useMyToast'
+import useUserData from '~/composable/useUserData'
 
 const myToast = useMyToast()
-const { $getUserData, $clearUserData } = useNuxtApp()
-const userData = $getUserData()
+const { getUserData, clearUserData } = useUserData()
+const userData = getUserData()
 const loading = ref(false)
 const config = useRuntimeConfig()
 const items = computed<NavigationMenuItem[]>(()=>[
@@ -49,7 +49,7 @@ const logoutUser = async () => {
     loading.value = false
     
     // 使用新的clearUserData方法清除用户数据
-    $clearUserData()
+    clearUserData()
     
     await navigateTo('/auth/login');
     myToast.success(' successfully!', 'Logout account successfully~')
@@ -59,7 +59,7 @@ const logoutUser = async () => {
     const errmsg = error.message
     
     // 即使出错也要清除用户数据
-    $clearUserData()
+    clearUserData()
     
     await navigateTo('/auth/login');
   }

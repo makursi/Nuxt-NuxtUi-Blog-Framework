@@ -25,7 +25,5 @@ export default defineNuxtConfig({
   },
   // 插件配置 - Nuxt 3 会自动导入 app/plugins 目录下的插件
   // 客户端插件会通过 .client.ts 后缀自动识别
-  plugins: [
-    '~/plugins/getUserData.client.ts'
-  ]
+  plugins: []
 })
