@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',
@@ -19,11 +19,7 @@ export default defineNuxtConfig({
       BASE_URL: process.env.BASE_URL,
       API_BASE_URL: process.env.API_BASE_URL,
     }
-  },
-  tiptap:{
-     prefix:'Tiptap'
-  },
+  }
   // 插件配置 - Nuxt 3 会自动导入 app/plugins 目录下的插件
   // 客户端插件会通过 .client.ts 后缀自动识别
-  plugins: []
 })

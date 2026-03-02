@@ -68,13 +68,3 @@ const isRegisterPage = route.path === '/auth/register'
   </div>
 </template>
 
-<style lang="scss" scoped>
-/* 自定义样式 */
-.gradient-bg {
-  @apply bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800;
-}
-
-.decoration-blob {
-  @apply absolute rounded-full blur-3xl opacity-10 dark:opacity-5;
-}
-</style>

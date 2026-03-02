@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePostStore } from '~/stores/post';
 import slugify from 'slugify';
-import MyEditor from '~/components/post/MyEditor.vue';
+import MyEditor from '~/components/RichTextEditor.vue';
 import useMyToast from '~/composable/useMyToast';
 definePageMeta({
   layout: 'admin'
