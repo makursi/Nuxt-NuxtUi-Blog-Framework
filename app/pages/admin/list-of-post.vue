@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useMyToast from "~/composable/useMyToast";
+import IconTabler from "~/components/IconTabler.vue";
 
 const myToast = useMyToast();
 definePageMeta({
@@ -117,7 +118,7 @@ onMounted(() => {
           class="px-6 py-2"
           v-if="isempty(postsArray.length)"
         >
-          <UIcon name="i-heroicons-plus" class="mr-2" />
+          <IconTabler name="tabler:plus" class="mr-2" />
           新建文章
         </UButton>
 
@@ -127,15 +128,15 @@ onMounted(() => {
           variant="outline"
           :loading="loading"
         >
-          <UIcon name="i-heroicons-arrow-path" class="mr-2" />
+          <IconTabler name="tabler:refresh" class="mr-2" />
           刷新
         </UButton>
       </div>
 
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center py-10">
-        <UIcon
-          name="i-heroicons-arrow-path"
+        <IconTabler
+          name="tabler:refresh"
           class="w-8 h-8 animate-spin text-primary-500"
         />
       </div>
@@ -165,8 +166,8 @@ onMounted(() => {
                   variant="outline"
                   size="sm"
                 >
-                  <UIcon
-                    name="i-heroicons-pencil"
+                  <IconTabler
+                    name="tabler:pencil"
                     class="w-4 h-4 mr-1"
                     size="24"
                   />
@@ -178,7 +179,7 @@ onMounted(() => {
                   variant="outline"
                   size="sm"
                 >
-                  <UIcon name="i-heroicons-trash" class="w-4 h-4 mr-1" />
+                  <IconTabler name="tabler:trash" class="w-4 h-4 mr-1" />
                   删除
                 </UButton>
               </div>
@@ -211,8 +212,8 @@ onMounted(() => {
 
       <!-- 空状态 -->
       <div v-else-if="!loading" class="text-center py-12">
-        <UIcon
-          name="i-heroicons-document-text"
+        <IconTabler
+          name="tabler:file-text"
           class="w-16 h-16 mx-auto text-gray-400 mb-4"
         />
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">

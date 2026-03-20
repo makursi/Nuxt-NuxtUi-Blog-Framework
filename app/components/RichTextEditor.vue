@@ -10,37 +10,31 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
-
-// 创建编辑器实例
+  
 const editor = useEditor({
-  extensions: [
-    StarterKit
-  ],
+  extensions: [StarterKit],
   content: props.modelValue,
   onUpdate: ({ editor }) => {
     emit('update:modelValue', editor.getHTML())
   },
   editorProps: {
     attributes: {
-      class: 'prose prose-invert max-w-none'
+      class: 'prose prose-invert max-w-none focus:outline-none'
     },
     placeholder: 'Start writing your content...'
   }
 })
 
-// 监听props变化，更新编辑器内容
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== editor.value?.getHTML()) {
     editor.value?.commands.setContent(newValue)
   }
 }, { immediate: true })
 
-// 工具栏按钮状态
 const isActive = (type: string) => {
   return editor.value?.isActive(type) || false
 }
 
-// 执行命令
 const executeCommand = (command: string, ...args: any[]) => {
   editor.value?.commands[command](...args)
 }
@@ -48,268 +42,247 @@ const executeCommand = (command: string, ...args: any[]) => {
 
 <template>
   <div class="rich-text-editor">
-    <!-- 工具栏 -->
-    <div class="toolbar bg-gray-800 border-b border-gray-700 p-2 flex flex-wrap gap-1">
-      <!-- 基础格式 -->
-      <div class="flex items-center space-x-1 p-1 bg-gray-700 rounded">
+    <div class="flex flex-wrap items-center gap-1 p-2 bg-gray-800 border-b border-gray-700">
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
         <button
           @click="executeCommand('toggleBold')"
-          :class="{ 'bg-indigo-600 text-white': isActive('bold') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('bold') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Bold"
         >
           <span class="font-bold">B</span>
         </button>
         <button
           @click="executeCommand('toggleItalic')"
-          :class="{ 'bg-indigo-600 text-white': isActive('italic') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('italic') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Italic"
         >
           <span class="italic">I</span>
         </button>
         <button
           @click="executeCommand('toggleUnderline')"
-          :class="{ 'bg-indigo-600 text-white': isActive('underline') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('underline') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Underline"
         >
           <span class="underline">U</span>
         </button>
         <button
           @click="executeCommand('toggleStrike')"
-          :class="{ 'bg-indigo-600 text-white': isActive('strike') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('strike') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Strike"
         >
           <span class="line-through">S</span>
         </button>
       </div>
 
-      <!-- 标题 -->
-      <div class="flex items-center space-x-1 p-1 bg-gray-700 rounded">
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
         <button
           @click="executeCommand('setHeading', { level: 1 })"
-          :class="{ 'bg-indigo-600 text-white': isActive('heading', { level: 1 }) }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('heading', { level: 1 }) ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'px-2 py-1 rounded text-sm font-bold transition-colors'
+          ]"
           title="H1"
         >
-          <span class="text-xl font-bold">H1</span>
+          H1
         </button>
         <button
           @click="executeCommand('setHeading', { level: 2 })"
-          :class="{ 'bg-indigo-600 text-white': isActive('heading', { level: 2 }) }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('heading', { level: 2 }) ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'px-2 py-1 rounded text-sm font-bold transition-colors'
+          ]"
           title="H2"
         >
-          <span class="text-lg font-bold">H2</span>
+          H2
         </button>
         <button
           @click="executeCommand('setHeading', { level: 3 })"
-          :class="{ 'bg-indigo-600 text-white': isActive('heading', { level: 3 }) }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('heading', { level: 3 }) ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'px-2 py-1 rounded text-sm font-bold transition-colors'
+          ]"
           title="H3"
         >
-          <span class="text-base font-bold">H3</span>
+          H3
         </button>
         <button
           @click="executeCommand('setParagraph')"
-          :class="{ 'bg-indigo-600 text-white': isActive('paragraph') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('paragraph') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'px-2 py-1 rounded text-sm transition-colors'
+          ]"
           title="Paragraph"
         >
-          <span>¶</span>
+          ¶
         </button>
       </div>
 
-      <!-- 列表和引用 -->
-      <div class="flex items-center space-x-1 p-1 bg-gray-700 rounded">
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
         <button
           @click="executeCommand('toggleBulletList')"
-          :class="{ 'bg-indigo-600 text-white': isActive('bulletList') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('bulletList') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Bullet List"
         >
           <span>•</span>
         </button>
         <button
           @click="executeCommand('toggleOrderedList')"
-          :class="{ 'bg-indigo-600 text-white': isActive('orderedList') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('orderedList') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Ordered List"
         >
           <span>1.</span>
         </button>
         <button
           @click="executeCommand('toggleBlockquote')"
-          :class="{ 'bg-indigo-600 text-white': isActive('blockquote') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('blockquote') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Blockquote"
         >
-          <span>">"</span>
+          <span>❝</span>
         </button>
       </div>
 
-      <!-- 代码和分割线 -->
-      <div class="flex items-center space-x-1 p-1 bg-gray-700 rounded">
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
         <button
           @click="executeCommand('toggleCodeBlock')"
-          :class="{ 'bg-indigo-600 text-white': isActive('codeBlock') }"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            isActive('codeBlock') ? 'bg-indigo-600 text-white' : 'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Code Block"
         >
           <span>{ }</span>
         </button>
         <button
           @click="executeCommand('setHorizontalRule')"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Horizontal Rule"
         >
-          <span>---</span>
+          <span>—</span>
         </button>
       </div>
 
-      <!-- 历史记录 -->
-      <div class="flex items-center space-x-1 p-1 bg-gray-700 rounded">
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
         <button
           @click="executeCommand('undo')"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Undo"
         >
-          <span>↶</span>
+          <span>↩</span>
         </button>
         <button
           @click="executeCommand('redo')"
-          class="p-2 rounded hover:bg-gray-600 transition-colors"
+          :class="[
+            'hover:bg-gray-600 text-gray-300',
+            'p-1.5 rounded transition-colors'
+          ]"
           title="Redo"
         >
-          <span>↷</span>
+          <span>↪</span>
         </button>
       </div>
     </div>
 
-    <!-- 编辑器内容 -->
-    <div class="editor-content">
+    <div class="editor-content min-h-[400px] p-6 bg-gray-800 text-white text-base leading-relaxed">
       <EditorContent :editor="editor" />
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .rich-text-editor {
-  width: 100%;
-  border: 1px solid #374151;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  background: #1f2937;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  @apply w-full border border-gray-700 rounded-lg overflow-hidden bg-gray-800 shadow-md;
+}
 
-  .editor-content {
-    min-height: 400px;
-    padding: 1.5rem;
-    color: white;
-    font-size: 1rem;
-    line-height: 1.6;
+.editor-content :deep(.ProseMirror) {
+  @apply outline-none;
+}
 
-    :deep(.ProseMirror) {
-      &:focus {
-        outline: none;
-      }
+.editor-content :deep(.ProseMirror h1) {
+  @apply text-2xl font-bold text-white mb-4 pb-2 border-b border-gray-700;
+}
 
-      // 富文本内容样式
-      h1, h2, h3, h4, h5, h6 {
-        color: white;
-        margin: 1.5rem 0 1rem 0;
-        font-weight: 600;
-      }
+.editor-content :deep(.ProseMirror h2) {
+  @apply text-xl font-bold text-white mb-4;
+}
 
-      h1 {
-        font-size: 1.875rem;
-        border-bottom: 2px solid #374151;
-        padding-bottom: 0.5rem;
-      }
+.editor-content :deep(.ProseMirror h3) {
+  @apply text-lg font-bold text-white mb-4;
+}
 
-      h2 {
-        font-size: 1.5rem;
-      }
+.editor-content :deep(.ProseMirror p) {
+  @apply mb-4;
+}
 
-      h3 {
-        font-size: 1.25rem;
-      }
+.editor-content :deep(.ProseMirror ul),
+.editor-content :deep(.ProseMirror ol) {
+  @apply my-4 pl-6;
+}
 
-      p {
-        margin-bottom: 1rem;
-      }
+.editor-content :deep(.ProseMirror li) {
+  @apply my-2;
+}
 
-      ul, ol {
-        margin: 1rem 0;
-        padding-left: 1.5rem;
-      }
+.editor-content :deep(.ProseMirror blockquote) {
+  @apply border-l-4 border-indigo-500 pl-4 my-4 text-gray-400 italic;
+}
 
-      li {
-        margin: 0.5rem 0;
-      }
+.editor-content :deep(.ProseMirror pre) {
+  @apply bg-gray-900 p-4 rounded-lg overflow-x-auto my-4;
+}
 
-      blockquote {
-        border-left: 4px solid #6366f1;
-        padding-left: 1rem;
-        margin: 1rem 0;
-        color: #a0aec0;
-        font-style: italic;
-      }
+.editor-content :deep(.ProseMirror pre code) {
+  @apply bg-transparent p-0 text-gray-100 font-mono;
+}
 
-      pre {
-        background: #1a202c;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-        margin: 1rem 0;
+.editor-content :deep(.ProseMirror a) {
+  @apply text-indigo-500 underline hover:text-indigo-400;
+}
 
-        code {
-          background: transparent;
-          padding: 0;
-          color: #f3f4f6;
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-        }
-      }
+.editor-content :deep(.ProseMirror img) {
+  @apply max-w-full h-auto rounded-lg my-4;
+}
 
-      a {
-        color: #6366f1;
-        text-decoration: underline;
+.editor-content :deep(.ProseMirror table) {
+  @apply w-full border-collapse my-4;
+}
 
-        &:hover {
-          color: #818cf8;
-        }
-      }
+.editor-content :deep(.ProseMirror table th),
+.editor-content :deep(.ProseMirror table td) {
+  @apply border border-gray-700 p-3 text-left;
+}
 
-      img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 0.5rem;
-        margin: 1rem 0;
-      }
+.editor-content :deep(.ProseMirror table th) {
+  @apply bg-gray-700 font-semibold;
+}
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1rem 0;
-
-        th, td {
-          border: 1px solid #374151;
-          padding: 0.75rem;
-          text-align: left;
-        }
-
-        th {
-          background: #2d3748;
-          font-weight: 600;
-        }
-
-        tr:nth-child(even) {
-          background: #2d3748;
-        }
-      }
-    }
-  }
+.editor-content :deep(.ProseMirror table tr:nth-child(even)) {
+  @apply bg-gray-700;
 }
 </style>

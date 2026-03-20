@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import IconTabler from '~/components/IconTabler.vue'
 
 const route = useRoute()
 const isLoginPage = route.path === '/auth/login'
@@ -20,7 +21,7 @@ const isRegisterPage = route.path === '/auth/register'
         <!-- 卡片头部 -->
         <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-6 text-white">
           <div class="flex items-center justify-center mb-2">
-            <UIcon name="i-heroicons-shield-check" class="w-8 h-8" />
+            <IconTabler name="tabler:shield-check" class="w-8 h-8" />
           </div>
           <h1 class="text-2xl font-bold text-center">
             {{ isLoginPage ? 'Welcome Back' : 'Create Your Account' }}

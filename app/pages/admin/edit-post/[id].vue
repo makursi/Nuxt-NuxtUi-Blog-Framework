@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { usePostStore } from "~/stores/post";
 import slugify from "slugify";
-import MyEditor from "~/components/RichTextEditor.vue";
+import RichTextEditor from "~/components/RichTextEditor.vue";
 import useMyToast from "~/composable/useMyToast";
+import { navigateTo } from "nuxt/app";
+import IconTabler from "~/components/IconTabler.vue";
+
+// 页面元数据
 definePageMeta({
   layout: "admin",
+  title: "编辑文章",
 });
 
 const route = useRoute();
@@ -14,58 +20,133 @@ const postId = Array.isArray(route.params.id)
 const postStore = usePostStore();
 const myToast = useMyToast();
 
-// 初始化文章数据
-const postInput = computed(() => postStore.postInput);
-const loading = computed(() => postStore.loading.update);
+// 本地文章数据，用于表单绑定
+const localPostInput = ref({
+  title: '',
+  post_content: '',
+  slug: '',
+  excerpt: '',
+  tags: [] as string[],
+  status: 'draft' as 'draft' | 'published' | 'archived',
+  tagsInput: ''
+});
 
-// 监听标题变化以自动生成slug
+// 标记是否已加载文章数据
+const isDataLoaded = ref(false);
+
+// 从 store 获取文章数据并同步到本地
+const loadPostData = async () => {
+  try {
+    await postStore.fetchPostById(postId);
+    const post = postStore.currentPost;
+    
+    if (post) {
+      // 将文章数据同步到本地
+      localPostInput.value = {
+        title: post.title || '',
+        post_content: post.post_content || '',
+        slug: post.slug || '',
+        excerpt: post.excerpt || '',
+        tags: post.tags || [],
+        status: post.status || 'draft',
+        tagsInput: ''
+      };
+      isDataLoaded.value = true;
+    }
+  } catch (error) {
+    console.error("获取文章失败:", error);
+    myToast.error("获取文章失败");
+  }
+};
+
+// 监听文章数据变化，同步到 store 的 postInput
+watch(() => localPostInput.value, (newValue) => {
+  if (isDataLoaded.value) {
+    postStore.postInput = { ...newValue };
+  }
+}, { deep: true });
+
+// 监听标题变化以自动生成 slug
 watch(
-  () => postInput.value.title,
+  () => localPostInput.value.title,
   (newTitle) => {
-    if (newTitle && !postInput.value.slug) {
-      postInput.value.slug = slugify(newTitle, { lower: true, strict: true });
+    if (newTitle && !localPostInput.value.slug) {
+      localPostInput.value.slug = slugify(newTitle, { lower: true, strict: true });
     }
   },
 );
 
+// 防抖定时器
+let debounceTimer: NodeJS.Timeout | null = null;
+
+// 监听表单数据变化（带防抖）
+watch(
+  () => localPostInput.value,
+  (newValue) => {
+    // 清除之前的定时器
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    
+    // 设置新的定时器（500ms 防抖）
+    debounceTimer = setTimeout(() => {
+      console.log('表单数据已更改:', newValue);
+      // 可以在这里添加自动保存逻辑
+    }, 500);
+  },
+  { deep: true }
+);
+
+// 清理防抖定时器
+onUnmounted(() => {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+});
+
 // 保存文章
 const savePost = async () => {
   try {
-    await postStore.updatePost(postId);
+    // 验证必填字段
+    if (!localPostInput.value.title.trim() || !localPostInput.value.post_content.trim()) {
+      myToast.error("错误", "请填写标题和内容");
+      return;
+    }
+
+    // 同步到 store
+    postStore.postInput = { ...localPostInput.value };
+    
+    // 调用 store 的更新方法
+    await postStore.updatePost(Number(postId));
     myToast.success("文章更新成功！");
     await navigateTo("/admin/list-of-post");
-  } catch (error) {
+  } catch (error: any) {
     console.error("更新文章失败:", error);
-    myToast.error("更新文章失败");
+    myToast.error("更新文章失败", error.message);
   }
 };
 
 // 添加标签
 const addTag = () => {
   if (
-    postInput.value.tagsInput?.trim() &&
-    !postInput.value.tags.includes(postInput.value.tagsInput.trim())
+    localPostInput.value.tagsInput?.trim() &&
+    !localPostInput.value.tags.includes(localPostInput.value.tagsInput.trim())
   ) {
-    postInput.value.tags.push(postInput.value.tagsInput.trim());
-    postInput.value.tagsInput = "";
+    localPostInput.value.tags.push(localPostInput.value.tagsInput.trim());
+    localPostInput.value.tagsInput = "";
   }
 };
 
 // 移除标签
 const removeTag = (tagToRemove: string) => {
-  postInput.value.tags = postInput.value.tags.filter(
+  localPostInput.value.tags = localPostInput.value.tags.filter(
     (tag) => tag !== tagToRemove,
   );
 };
 
 // 页面加载时获取文章数据
 onMounted(async () => {
-  try {
-    await postStore.fetchPostById(postId);
-  } catch (error) {
-    console.error("获取文章失败:", error);
-    myToast.error("获取文章失败");
-  }
+  await loadPostData();
 });
 </script>
 
@@ -79,9 +160,10 @@ onMounted(async () => {
       </div>
 
       <form @submit.prevent="savePost" class="space-y-6">
+        <!-- 标题输入框 -->
         <UFormGroup label="文章标题" name="title" required class="mb-6">
           <UInput
-            v-model="postInput.title"
+            v-model="localPostInput.title"
             placeholder="请输入文章标题"
             size="lg"
             color="gray"
@@ -90,10 +172,11 @@ onMounted(async () => {
           />
         </UFormGroup>
 
+        <!-- 内容输入框 -->
         <UFormGroup label="文章内容" name="content" required class="mb-6">
           <ClientOnly class="mt-2">
-            <MyEditor
-              v-model="postInput.post_content"
+            <RichTextEditor
+              v-model="localPostInput.post_content"
               class="editor-wrapper w-full"
             />
             <template #fallback>
@@ -106,11 +189,12 @@ onMounted(async () => {
           </ClientOnly>
         </UFormGroup>
 
+        <!-- 标签输入框 -->
         <UFormGroup label="标签" name="tags" class="mb-6">
           <div class="mt-2">
             <div class="flex flex-wrap gap-2 mb-3">
               <UTag
-                v-for="tag in postInput.tags"
+                v-for="tag in localPostInput.tags"
                 :key="tag"
                 :label="tag"
                 color="primary"
@@ -121,7 +205,7 @@ onMounted(async () => {
             </div>
             <div class="flex gap-2">
               <UInput
-                v-model="postInput.tagsInput"
+                v-model="localPostInput.tagsInput"
                 placeholder="输入标签并按回车添加"
                 size="sm"
                 color="gray"
@@ -137,7 +221,7 @@ onMounted(async () => {
 
         <UFormGroup label="文章状态" name="status" class="mb-6">
           <URadioGroup
-            v-model="postInput.status"
+            v-model="localPostInput.status"
             :options="[
               { label: '草稿', value: 'draft' },
               { label: '已发布', value: 'published' },
@@ -156,18 +240,18 @@ onMounted(async () => {
             size="lg"
             class="px-6 py-3"
           >
-            <UIcon name="i-heroicons-arrow-left" class="mr-2" />
+            <IconTabler name="tabler:arrow-left" class="mr-2" />
             取消
           </UButton>
 
           <UButton
             type="submit"
-            :loading="loading"
+            :loading="postStore.loading.update"
             color="primary"
             size="lg"
             class="px-8 py-3"
           >
-            <UIcon name="i-heroicons-check-circle" class="mr-2" />
+            <IconTabler name="tabler:check-circle" class="mr-2" />
             保存更改
           </UButton>
         </div>
