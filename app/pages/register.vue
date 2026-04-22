@@ -1,61 +1,109 @@
 <script setup lang="ts">
+import type { RegisterInput } from '~/types';
+import { registerSchema } from '../../schemas/auth.schema';
+import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui';
+
 definePageMeta({
-    layout: "auth",
+  layout: 'default',
+  middleware: 'auth',
+  guestOnly: true,
 });
 
-import useAuth from "~/composable/auth";
-const { registerInput, isLoading, registerUser } = useAuth();
+const { register } = useAuth();
+const authStore = useAuthStore();
+const router = useRouter();
 
-const createUser = async () => {
-    await registerUser();
+const fields: AuthFormField[] = [
+  {
+    name: 'name',
+    type: 'text',
+    label: 'Name',
+    placeholder: 'Enter your name',
+    required: true,
+  },
+  {
+    name: 'email',
+    type: 'email',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    required: true,
+  },
+  {
+    name: 'password',
+    type: 'password',
+    label: 'Password',
+    placeholder: 'Enter your password',
+    required: true,
+  },
+  {
+    name: 'confirmPassword',
+    type: 'password',
+    label: 'Confirm Password',
+    placeholder: 'Confirm your password',
+    required: true,
+  },
+];
+
+const providers = [
+  {
+    label: 'Google',
+    icon: 'i-simple-icons-google',
+    onClick: () => {
+      // TODO: Implement Google OAuth
+    },
+  },
+  {
+    label: 'GitHub',
+    icon: 'i-simple-icons-github',
+    onClick: () => {
+      // TODO: Implement GitHub OAuth
+    },
+  },
+];
+
+type Schema = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 };
+
+async function onSubmit(payload: FormSubmitEvent<Schema>) {
+  const result = await register({
+    name: payload.data.name,
+    email: payload.data.email,
+    password: payload.data.password,
+    confirmPassword: payload.data.confirmPassword,
+  });
+  
+  if (result) {
+    router.push('/login');
+  }
+}
 </script>
 
 <template>
-    <div class="w-full max-w-md mx-auto">
-        <NuxtLayout>
-            <form @submit.prevent="createUser" class="space-y-4">
-                <UFormField label="Name" name="name" required>
-                    <UInput
-                        placeholder="Enter your name"
-                        v-model="registerInput.name"
-                        class="w-full"
-                    />
-                </UFormField>
-
-                <UFormField label="Email" name="email" required>
-                    <UInput
-                        type="email"
-                        placeholder="Enter your email"
-                        v-model="registerInput.email"
-                        class="w-full"
-                    />
-                </UFormField>
-
-                <UFormField label="Password" name="password" required>
-                    <UInput
-                        type="password"
-                        placeholder="Enter your password"
-                        v-model="registerInput.password"
-                        class="w-full"
-                    />
-                </UFormField>
-
-                <div class="pt-4">
-                    <UButton
-                        type="submit"
-                        color="primary"
-                        variant="solid"
-                        size="lg"
-                        class="w-full py-2"
-                        :loading="isLoading"
-                    >
-                        {{ isLoading ? "Processing..." : "Create Account" }}
-                    </UButton>
-                </div>
-            </form>
-        </NuxtLayout>
-    </div>
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-pink-50 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950 py-12 px-4">
+    <UPageCard class="w-full max-w-md">
+      <UAuthForm
+        :schema="registerSchema"
+        title="Create Account"
+        description="Enter your information to create a new account."
+        icon="i-tabler-user-plus"
+        :fields="fields"
+        :providers="providers"
+        :loading="authStore.loading"
+        @submit="onSubmit"
+      >
+        <template #footer>
+          <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+            Already have an account?
+            <NuxtLink to="/login" class="text-primary-600 hover:text-primary-500 font-medium">
+              Sign In
+            </NuxtLink>
+          </div>
+        </template>
+      </UAuthForm>
+    </UPageCard>
+  </div>
 </template>
-
-<style lang="scss" scoped></style>

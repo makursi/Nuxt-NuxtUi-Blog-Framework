@@ -25,4 +25,14 @@ logs
 
 # Skills directory (development files)
 .trae/skills/
+.kilocode
+.kiro
+.agents
 .agents/skills/
+.github
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

@@ -1,3 +1,5 @@
+// 全局管理文章状态
+
 import { defineStore } from "pinia";
 
 export const usePostStore = defineStore("post-store", () => {

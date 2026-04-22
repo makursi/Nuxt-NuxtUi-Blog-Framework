@@ -1,103 +1,69 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import type { NavigationMenuItem } from "@nuxt/ui";
-import useUserData from "~/composable/useUserData";
+import type { NavigationMenuItem } from '@nuxt/ui';
 
-const { getUserData } = useUserData();
+const authStore = useAuthStore();
 const route = useRoute();
 
-const userInput = ref({
-    user: {
-        name: "",
-        email: "",
+const items = computed<NavigationMenuItem[]>(() => {
+  const baseItems: NavigationMenuItem[] = [
+    {
+      label: 'Home',
+      to: '/',
+      icon: 'i-tabler-home',
     },
-    token: "",
+  ];
+  
+  // Only show Dashboard when user is logged in
+  if (authStore.isAuthenticated) {
+    baseItems.push({
+      label: 'Dashboard',
+      to: '/dashboard',
+      icon: 'i-tabler-file-text',
+    });
+  }
+  
+  return baseItems;
 });
 
-const notGuest = ref(true);
-
-onMounted(() => {
-    const storedData = getUserData();
-    if (storedData?.token) {
-        userInput.value = storedData;
-        notGuest.value = false;
-    }
-});
-
-const items = computed<NavigationMenuItem[]>(() => [
-    {
-        label: "Post",
-        to: "/admin/create-post",
-        icon: "i-heroicons-arrow-right-on-rectangle",
-        active: route.path.startsWith("/docs/getting-started"),
-    },
-    {
-        label: "Dashboard",
-        to: "/admin/list-of-post",
-        icon: "i-heroicons-user-plus",
-        active: route.path.startsWith("/docs/components"),
-    },
-]);
+const handleLogout = async () => {
+  const { logout } = useAuth();
+  await logout();
+};
 </script>
 
 <template>
-    <UHeader toggle-side="left">
-        <template #title>
-            <Logo class="h-6 w-auto" />
-            <h1 class="btn btn-waring">
-                <NuxtLink to="/">
-                    {{ userInput.user.name || "My" }} Blog
-                </NuxtLink>
-            </h1>
-        </template>
+  <UHeader>
+    <template #title>
+      <NuxtLink to="/" class="text-xl font-bold">
+        {{ authStore.userName }} Blog
+      </NuxtLink>
+    </template>
 
-        <UNavigationMenu :items="items" />
+    <UNavigationMenu :items="items" />
 
-        <template #right>
-            <UColorModeButton />
+    <template #right>
+      <UColorModeButton />
 
-            <!-- 登录和注册按钮 -->
-            <div class="flex items-center gap-2" v-if="notGuest">
-                <UButton
-                    to="/login"
-                    color="gray"
-                    variant="outline"
-                    size="md"
-                    class="rounded-full"
-                >
-                    Sign In
-                </UButton>
-                <UButton
-                    to="/register"
-                    color="primary"
-                    variant="solid"
-                    size="md"
-                    class="rounded-full"
-                >
-                    Sign Up
-                </UButton>
-            </div>
+      <!-- User menu when logged in -->
+      <UDropdownMenu v-if="authStore.isAuthenticated" :items="[[{ label: 'Logout', icon: 'i-tabler-logout', click: handleLogout }]]">
+        <UButton color="primary" variant="ghost">
+          {{ authStore.userName }}
+        </UButton>
+      </UDropdownMenu>
 
-            <UTooltip text="Open on GitHub" :kbds="['meta', 'G']">
-                <UButton
-                    color="neutral"
-                    variant="ghost"
-                    to="https://github.com/nuxt/ui"
-                    target="_blank"
-                    icon="i-simple-icons-github"
-                    aria-label="GitHub"
-                />
-            </UTooltip>
-        </template>
+      <!-- Login/Register buttons when logged out -->
+      <div v-else class="flex items-center gap-2">
+        <UButton to="/login" color="gray" variant="outline" size="md">
+          Sign In
+        </UButton>
+        <UButton to="/register" color="primary" variant="solid" size="md">
+          Sign Up
+        </UButton>
+      </div>
+    </template>
 
-        <template #body>
-            <UNavigationMenu
-                :items="items"
-                orientation="vertical"
-                class="-mx-2.5"
-            />
-        </template>
-    </UHeader>
+    <template #body>
+      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
+    </template>
+  </UHeader>
 </template>
-
-<style lang="css" scoped></style>
